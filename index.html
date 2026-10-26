@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="hi">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Sirf Tumhare Liye 💌</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link
+            href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Poppins:wght@300;400;500&display=swap"
+            rel="stylesheet">
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            html,
+            body {
+                height: 100%;
+            }
+
+            body {
+                font-family: 'Poppins', sans-serif;
+                color: #fff;
+                overflow: hidden;
+                background: radial-gradient(circle at 50% 30%, #5a0f2e 0%, #2b0615 55%, #12020a 100%);
+            }
+
+            /* ---------- Layers ---------- */
+            #stars,
+            #petals,
+            #fx {
+                position: fixed;
+                inset: 0;
+                pointer-events: none;
+            }
+
+            #stars {
+                z-index: 0;
+            }
+
+            #petals {
+                z-index: 6;
+            }
+
+            #fx {
+                z-index: 7;
+            }
+
+            .stage {
+                position: relative;
+                z-index: 2;
+                height: 100dvh;
+                display: grid;
+                place-items: center;
+                padding: 16px;
+            }
+
+            .stage>* {
+                grid-area: 1 / 1;
+            }
+
+            /* ---------- Twinkling stars ---------- */
+            .star {
+                position: absolute;
+                width: 3px;
+                height: 3px;
+                border-radius: 50%;
+                background: #ffd6e0;
+                box-shadow: 0 0 8px 2px rgba(255, 150, 180, .8);
+                opacity: 0;
+                animation: twinkle 3s ease-in-out infinite;
+            }
+
+            @keyframes twinkle {
+
+                0%,
+                100% {
+                    opacity: 0;
+                    transform: scale(.5);
+                }
+
+                50% {
+                    opacity: .9;
+                    transform: scale(1.3);
+                }
+            }
+
+            /* ---------- Rose petals ---------- */
+            .petal {
+                position: absolute;
+                top: 0;
+                border-radius: 150% 0 150% 0;
+                opacity: .75;
+                filter: drop-shadow(0 2px 3px rgba(0, 0, 0, .25));
+                animation: fall linear infinite;
+                will-change: transform;
+            }
+
+            @keyframes fall {
+                0% {
+                    transform: translate(0, -10vh) rotate(0deg);
+                }
+
+                25% {
+                    transform: translate(var(--s), 28vh) rotate(110deg);
+                }
+
+                50% {
+                    transform: translate(calc(var(--s) * -1), 58vh) rotate(220deg);
+                }
+
+                75% {
+                    transform: translate(var(--s), 86vh) rotate(330deg);
+                }
+
+                100% {
+                    transform: translate(0, 112vh) rotate(440deg);
+                }
+            }
+
+            /* ---------- 1) Shining intro text ---------- */
+            .intro {
+                text-align: center;
+                font-family: 'Dancing Script', cursive;
+                font-size: clamp(2.2rem, 9vw, 3.8rem);
+                line-height: 1.35;
+                opacity: 0;
+                background: linear-gradient(110deg, #ffd6e0 20%, #ffffff 38%, #ff4d6d 50%, #ffffff 62%, #ffd6e0 80%);
+                background-size: 220% auto;
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+                filter: drop-shadow(0 0 14px rgba(255, 77, 109, .75));
+                animation: shimmer 2.6s linear infinite;
+            }
+
+            .intro span {
+                font-size: .72em;
+            }
+
+            .intro.in {
+                animation: shimmer 2.6s linear infinite, textIn 1.2s ease forwards;
+            }
+
+            .intro.out {
+                animation: shimmer 2.6s linear infinite, textOut .7s ease forwards;
+            }
+
+            @keyframes shimmer {
+                to {
+                    background-position: -220% center;
+                }
+            }
+
+            @keyframes textIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(24px) scale(.94);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: none;
+                }
+            }
+
+            @keyframes textOut {
+                from {
+                    opacity: 1;
+                    transform: none;
+                }
+
+                to {
+                    opacity: 0;
+                    transform: translateY(-20px) scale(1.05);
+                }
+            }
+
+            /* ---------- 2) Heart drawing ---------- */
+            .heart-draw {
+                width: min(60vw, 260px);
+                opacity: 0;
+                overflow: visible;
+                filter: drop-shadow(0 0 22px rgba(255, 10, 84, .8));
+            }
+
+            .heart-draw path {
+                stroke-dasharray: 1;
+                stroke-dashoffset: 1;
+                fill-opacity: 0;
+            }
+
+            .heart-draw.in {
+                opacity: 1;
+                animation: heartBeat 1s ease-in-out 2.6s 2;
+            }
+
+            .heart-draw.in path {
+                animation: draw 1.8s ease forwards, fillIn .9s ease 1.7s forwards;
+            }
+
+            .heart-draw.out {
+                opacity: 1;
+                animation: heartOut .6s ease forwards;
+            }
+
+            .heart-draw.out path {
+                stroke-dashoffset: 0;
+                fill-opacity: 1;
+            }
+
+            @keyframes draw {
+                to {
+                    stroke-dashoffset: 0;
+                }
+            }
+
+            @keyframes fillIn {
+                to {
+                    fill-opacity: 1;
+                }
+            }
+
+            @keyframes heartBeat {
+
+                0%,
+                100% {
+                    transform: scale(1);
+                }
+
+                20% {
+                    transform: scale(1.14);
+                }
+
+                40% {
+                    transform: scale(1);
+                }
+
+                60% {
+                    transform: scale(1.1);
+                }
+            }
+
+            @keyframes heartOut {
+                from {
+                    opacity: 1;
+                    transform: scale(1) rotate(0);
+                }
+
+                to {
+                    opacity: 0;
+                    transform: scale(.2) rotate(-20deg);
+                }
+            }
+
+            /* ---------- 3) Envelope ---------- */
+            .envelope-wrap {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 38px;
+                opacity: 0;
+                transform: scale(.3);
+                pointer-events: none;
+                transition: opacity .8s ease, transform .8s ease;
+            }
+
+            .envelope-wrap.in {
+                pointer-events: auto;
+                animation: envPop .9s cubic-bezier(.2, 1.4, .4, 1) forwards;
+            }
+
+            .envelope-wrap.gone {
+                animation: none;
+                opacity: 0;
+                transform: translateY(70px) scale(.85);
+                pointer-events: none;
+            }
+
+            @keyframes envPop {
+                from {
+                    opacity: 0;
+                    transform: scale(.3);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: scale(1);
+                }
+            }
+
+            .envelope {
+                --rise: -175px;
+                position: relative;
+                width: min(74vw, 290px);
+                aspect-ratio: 290 / 190;
+                cursor: pointer;
+                filter: drop-shadow(0 20px 40px rgba(255, 20, 90, .45));
+                animation: floaty 3s ease-in-out infinite;
+                outline: none;
+            }
+
+            .envelope.open {
+                animation: none;
+                cursor: default;
+            }
+
+            @keyframes floaty {
+
+                0%,
+                100% {
+                    transform: translateY(0);
+                }
+
+                50% {
+                    transform: translateY(-9px);
+                }
+            }
+
+            .env-back,
+            .env-front,
+            .env-flap {
+                position: absolute;
+                left: 0;
+                width: 100%;
+            }
+
+            .env-back {
+                inset: 0;
+                height: 100%;
+                background: #a4133c;
+                border-radius: 8px;
+                z-index: 1;
+            }
+
+            .env-front {
+                inset: 0;
+                height: 100%;
+                background: linear-gradient(160deg, #ff4d6d, #d90429);
+                border-radius: 8px;
+                clip-path: polygon(0 0, 50% 56%, 100% 0, 100% 100%, 0 100%);
+                z-index: 3;
+            }
+
+            .env-flap {
+                top: 0;
+                height: 56%;
+                background: linear-gradient(180deg, #ff758f, #e5365e);
+                clip-path: polygon(0 0, 100% 0, 50% 100%);
+                border-radius: 8px 8px 0 0;
+                transform-origin: top center;
+                z-index: 4;
+                transition: transform .7s ease, z-index 0s .3s;
+            }
+
+            .envelope.open .env-flap {
+                transform: rotateX(180deg);
+                z-index: 1;
+            }
+
+            .seal {
+                position: absolute;
+                left: 50%;
+                top: 56%;
+                transform: translate(-50%, -50%);
+                font-size: 30px;
+                z-index: 5;
+                animation: sealPulse 1.4s ease-in-out infinite;
+                transition: opacity .3s;
+            }
+
+            .envelope.open .seal {
+                opacity: 0;
+                animation: none;
+            }
+
+            @keyframes sealPulse {
+
+                0%,
+                100% {
+                    transform: translate(-50%, -50%) scale(1);
+                }
+
+                50% {
+                    transform: translate(-50%, -50%) scale(1.25);
+                }
+            }
+
+            .heart-out {
+                position: absolute;
+                left: 50%;
+                top: 18%;
+                z-index: 2;
+                font-size: 66px;
+                line-height: 1;
+                transform: translate(-50%, 40px) scale(.5);
+                opacity: 0;
+                filter: drop-shadow(0 0 18px rgba(255, 60, 110, .9));
+            }
+
+            .heart-out span {
+                display: inline-block;
+                animation: throb 1s ease-in-out infinite;
+            }
+
+            .envelope.open .heart-out {
+                animation: rise 1.4s cubic-bezier(.2, .9, .3, 1) .5s forwards;
+            }
+
+            .heart-out.pop {
+                animation: heartPop .35s ease-in forwards !important;
+            }
+
+            @keyframes rise {
+                0% {
+                    opacity: 0;
+                    transform: translate(-50%, 40px) scale(.5);
+                }
+
+                20% {
+                    opacity: 1;
+                }
+
+                100% {
+                    opacity: 1;
+                    transform: translate(-50%, var(--rise)) scale(1.5);
+                }
+            }
+
+            @keyframes heartPop {
+                from {
+                    opacity: 1;
+                    transform: translate(-50%, var(--rise)) scale(1.5);
+                }
+
+                to {
+                    opacity: 0;
+                    transform: translate(-50%, var(--rise)) scale(3);
+                }
+            }
+
+            @keyframes throb {
+
+                0%,
+                100% {
+                    transform: scale(1);
+                }
+
+                50% {
+                    transform: scale(1.18);
+                }
+            }
+
+            .hint {
+                font-weight: 300;
+                letter-spacing: .5px;
+                color: #ffd6e0;
+                animation: blink 1.6s ease-in-out infinite;
+                transition: opacity .4s;
+            }
+
+            .hint.hide {
+                opacity: 0 !important;
+                animation: none;
+            }
+
+            @keyframes blink {
+
+                0%,
+                100% {
+                    opacity: .45;
+                }
+
+                50% {
+                    opacity: 1;
+                }
+            }
+
+            /* ---------- Burst effects ---------- */
+            .particle {
+                position: absolute;
+                left: 0;
+                top: 0;
+                line-height: 1;
+                opacity: 0;
+                animation: fly var(--t) cubic-bezier(.1, .8, .3, 1) forwards;
+            }
+
+            @keyframes fly {
+                0% {
+                    opacity: 1;
+                    transform: translate(-50%, -50%) scale(.3) rotate(0);
+                }
+
+                70% {
+                    opacity: 1;
+                }
+
+                100% {
+                    opacity: 0;
+                    transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1) rotate(var(--r));
+                }
+            }
+
+            .ring {
+                position: absolute;
+                width: 24px;
+                height: 24px;
+                border-radius: 50%;
+                border: 3px solid #ff8fab;
+                box-shadow: 0 0 20px #ff4d6d, inset 0 0 20px #ff4d6d;
+                transform: translate(-50%, -50%) scale(1);
+                animation: ring .9s ease-out forwards;
+            }
+
+            @keyframes ring {
+                to {
+                    transform: translate(-50%, -50%) scale(22);
+                    opacity: 0;
+                }
+            }
+
+            .flash {
+                position: fixed;
+                inset: 0;
+                z-index: 8;
+                pointer-events: none;
+                opacity: 0;
+                background: radial-gradient(circle, rgba(255, 255, 255, .9), rgba(255, 120, 160, .5) 40%, transparent 70%);
+            }
+
+            .flash.go {
+                animation: flash .6s ease-out;
+            }
+
+            @keyframes flash {
+                0% {
+                    opacity: 0;
+                }
+
+                15% {
+                    opacity: 1;
+                }
+
+                100% {
+                    opacity: 0;
+                }
+            }
+
+            /* ---------- 4) Letter ---------- */
+            .letter {
+                position: relative;
+                width: min(92vw, 540px);
+                max-height: 88dvh;
+                overflow-y: auto;
+                padding: 38px 28px 28px;
+                border-radius: 18px;
+                color: #5a2a3c;
+                background: linear-gradient(#fffaf3, #ffeef2);
+                box-shadow: 0 25px 70px rgba(0, 0, 0, .55), 0 0 70px rgba(255, 77, 109, .4);
+                opacity: 0;
+                transform: translateY(40px) scale(.9);
+                pointer-events: none;
+            }
+
+            .letter::before {
+                content: "💌";
+                position: absolute;
+                top: 8px;
+                left: 50%;
+                transform: translateX(-50%);
+                font-size: 28px;
+            }
+
+            .letter.in {
+                pointer-events: auto;
+                animation: letterIn .9s cubic-bezier(.2, .9, .3, 1.2) forwards;
+            }
+
+            @keyframes letterIn {
+                to {
+                    opacity: 1;
+                    transform: none;
+                }
+            }
+
+            .text {
+                font-family: 'Dancing Script', cursive;
+                font-weight: 600;
+                font-size: clamp(1.25rem, 4.8vw, 1.65rem);
+                line-height: 1.65;
+                white-space: pre-wrap;
+            }
+
+            #ghost {
+                visibility: hidden;
+            }
+
+            .cursor {
+                display: inline-block;
+                width: 2px;
+                height: 1.1em;
+                margin-left: 1px;
+                vertical-align: text-bottom;
+                background: #c9184a;
+                animation: caret .8s steps(1) infinite;
+            }
+
+            .cursor.done {
+                display: none;
+            }
+
+            @keyframes caret {
+                50% {
+                    opacity: 0;
+                }
+            }
+
+            .btn {
+                display: block;
+                margin: 20px auto 0;
+                padding: 14px 32px;
+                border: 0;
+                border-radius: 50px;
+                font-family: 'Poppins', sans-serif;
+                font-size: 1rem;
+                font-weight: 500;
+                color: #fff;
+                cursor: pointer;
+                background: linear-gradient(135deg, #ff0a54, #ff5c8a);
+                box-shadow: 0 8px 22px rgba(255, 10, 84, .45);
+                opacity: 0;
+                visibility: hidden;
+                transform: translateY(10px);
+                transition: opacity .6s, transform .6s, visibility .6s;
+            }
+
+            .btn.show {
+                opacity: 1;
+                visibility: visible;
+                transform: none;
+                animation: pulse 1.8s ease-in-out infinite;
+            }
+
+            .btn:hover {
+                transform: scale(1.06);
+            }
+
+            @keyframes pulse {
+
+                0%,
+                100% {
+                    box-shadow: 0 8px 22px rgba(255, 10, 84, .45);
+                }
+
+                50% {
+                    box-shadow: 0 8px 38px rgba(255, 10, 84, .85);
+                }
+            }
+
+            @media (prefers-reduced-motion: reduce) {
+
+                .petal,
+                .star {
+                    animation-duration: 20s;
+                }
+            }
+        </style>
+    </head>
+
+    <body>
+
+        <div id="stars" aria-hidden="true"></div>
+        <div id="petals" aria-hidden="true"></div>
+        <div id="fx" aria-hidden="true"></div>
+        <div class="flash" id="flash" aria-hidden="true"></div>
+
+        <main class="stage">
+
+            <!-- 1) Shining text -->
+            <h1 class="intro" id="intro">
+                Ek chhota sa surprise...<br>
+                <span>sirf tumhare liye ✨</span>
+            </h1>
+
+            <!-- 2) Heart draws itself -->
+            <svg class="heart-draw" id="heartDraw" viewBox="-5 -5 110 100" aria-hidden="true">
+                <defs>
+                    <linearGradient id="hg" x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0%" stop-color="#ff9ab0" />
+                        <stop offset="100%" stop-color="#ff0a54" />
+                    </linearGradient>
+                </defs>
+                <path pathLength="1"
+                    d="M50 85 C 10 55, 0 30, 18 14 C 32 2, 46 10, 50 24 C 54 10, 68 2, 82 14 C 100 30, 90 55, 50 85 Z"
+                    fill="url(#hg)" stroke="url(#hg)" stroke-width="2.5" stroke-linejoin="round" />
+            </svg>
+
+            <!-- 3) Envelope -->
+            <div class="envelope-wrap" id="envWrap">
+                <div class="envelope" id="envelope" role="button" tabindex="0" aria-label="Envelope kholo">
+                    <div class="env-back"></div>
+                    <div class="heart-out" id="heartOut"><span>❤️</span></div>
+                    <div class="env-front"></div>
+                    <div class="env-flap"></div>
+                    <div class="seal">💗</div>
+                </div>
+                <p class="hint" id="hint">Envelope par tap karo 💌</p>
+            </div>
+
+            <!-- 4) Letter -->
+            <section class="letter" id="letter">
+                <p class="text"><span id="typed"></span><span class="cursor"></span><span id="ghost"></span></p>
+                <button class="btn" id="forgiveBtn">Click Here babuu💖</button>
+            </section>
+
+        </main>
+
+        <script>
+            /* =====================================================
+               ✏️  YAHAN APNA NAAM AUR MESSAGE BADLO
+               ===================================================== */
+            const HER_NAME = "Hey Sapna Babuu❤️‍🩹💗";        // uska naam ya nickname
+            const YOUR_NAME = "Your Baby";      // apna naam likho
+
+            const MESSAGE =
+                `${HER_NAME},
+
+Aaj maine apni life ka pehla code likha hai… 👨🏻‍💻✨
+Abhi toh coding mein beginner hoon, galtiyan bhi hongi aur code bhi kai baar fail hoga… 😂❤️
+Lekin ek baat hai, meri life ka ek aisa naam hai jise main kabhi apni priority list se remove nahi karna chahta… aur woh naam hai *Sapna*. 🫶🏻💗
+Coding mein toh dheere-dheere expert ban jaunga, par tumhe special feel karane ke naye-naye tareeke hamesha dhoondhta rahunga. 🥹❤️
+*My first code, my first step… aur meri favourite notification — YOU!* 💌👩🏻‍💻
+
+– ${YOUR_NAME}`;
+            /* ===================================================== */
+
+            const $ = (id) => document.getElementById(id);
+            const rand = (a, b) => Math.random() * (b - a) + a;
+
+            /* ---------- Background stars ---------- */
+            (function makeStars() {
+                const box = $('stars');
+                for (let i = 0; i < 45; i++) {
+                    const s = document.createElement('i');
+                    s.className = 'star';
+                    s.style.left = rand(0, 100) + '%';
+                    s.style.top = rand(0, 100) + '%';
+                    s.style.animationDelay = rand(0, 4) + 's';
+                    s.style.animationDuration = rand(2.5, 5) + 's';
+                    box.appendChild(s);
+                }
+            })();
+
+            /* ---------- Soft rose petals (always falling) ---------- */
+            (function makePetals() {
+                const box = $('petals');
+                const colors = [
+                    'linear-gradient(135deg,#ff8fa3,#d90429)',
+                    'linear-gradient(135deg,#ffb3c6,#e5383b)',
+                    'linear-gradient(135deg,#ff758f,#a4133c)',
+                    'linear-gradient(135deg,#ffccd5,#ff4d6d)'
+                ];
+                const count = window.innerWidth < 600 ? 18 : 28;
+                for (let i = 0; i < count; i++) {
+                    const p = document.createElement('i');
+                    p.className = 'petal';
+                    const size = rand(10, 20);
+                    p.style.width = size + 'px';
+                    p.style.height = size * 1.25 + 'px';
+                    p.style.left = rand(0, 100) + '%';
+                    p.style.background = colors[i % colors.length];
+                    p.style.setProperty('--s', rand(20, 70) + 'px');
+                    p.style.animationDuration = rand(9, 17) + 's';
+                    p.style.animationDelay = -rand(0, 17) + 's';   // negative = already in motion
+                    box.appendChild(p);
+                }
+            })();
+
+            /* ---------- Pop sound (no files needed) ---------- */
+            function popSound() {
+                try {
+                    const AC = window.AudioContext || window.webkitAudioContext;
+                    const ctx = new AC();
+                    const t = ctx.currentTime;
+
+                    const o = ctx.createOscillator();
+                    const g = ctx.createGain();
+                    o.type = 'sine';
+                    o.frequency.setValueAtTime(720, t);
+                    o.frequency.exponentialRampToValueAtTime(80, t + 0.2);
+                    g.gain.setValueAtTime(0.7, t);
+                    g.gain.exponentialRampToValueAtTime(0.001, t + 0.28);
+                    o.connect(g).connect(ctx.destination);
+                    o.start(t); o.stop(t + 0.3);
+
+                    const len = ctx.sampleRate * 0.15;
+                    const buf = ctx.createBuffer(1, len, ctx.sampleRate);
+                    const d = buf.getChannelData(0);
+                    for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / len);
+                    const n = ctx.createBufferSource();
+                    const ng = ctx.createGain();
+                    ng.gain.value = 0.35;
+                    n.buffer = buf;
+                    n.connect(ng).connect(ctx.destination);
+                    n.start(t);
+                } catch (e) { /* sound optional */}
+            }
+
+            /* ---------- Blast: hearts + sparkles + shockwave ---------- */
+            function blast(x, y, amount = 46) {
+                const fx = $('fx');
+                const icons = ['❤️', '💖', '💗', '💕', '✨', '💘', '🌹', '💞'];
+
+                const ring = document.createElement('div');
+                ring.className = 'ring';
+                ring.style.left = x + 'px';
+                ring.style.top = y + 'px';
+                fx.appendChild(ring);
+                setTimeout(() => ring.remove(), 1000);
+
+                for (let i = 0; i < amount; i++) {
+                    const el = document.createElement('span');
+                    el.className = 'particle';
+                    el.textContent = icons[Math.floor(Math.random() * icons.length)];
+                    const angle = rand(0, Math.PI * 2);
+                    const dist = rand(90, Math.min(window.innerWidth, 520) * 0.85);
+                    el.style.left = x + 'px';
+                    el.style.top = y + 'px';
+                    el.style.fontSize = rand(16, 38) + 'px';
+                    el.style.setProperty('--dx', Math.cos(angle) * dist + 'px');
+                    el.style.setProperty('--dy', Math.sin(angle) * dist + 70 + 'px'); // slight gravity feel
+                    el.style.setProperty('--r', rand(-200, 200) + 'deg');
+                    el.style.setProperty('--t', rand(1.0, 1.8) + 's');
+                    fx.appendChild(el);
+                    setTimeout(() => el.remove(), 2000);
+                }
+
+                const flash = $('flash');
+                flash.classList.remove('go');
+                void flash.offsetWidth;
+                flash.classList.add('go');
+            }
+
+            /* ---------- Typing effect ---------- */
+            function typeLetter(done) {
+                const typed = $('typed');
+                const ghost = $('ghost');
+                const cursor = document.querySelector('.cursor');
+                let i = 0;
+                ghost.textContent = MESSAGE;   // reserves final height so the card doesn't jump
+
+                (function step() {
+                    i++;
+                    typed.textContent = MESSAGE.slice(0, i);
+                    ghost.textContent = MESSAGE.slice(i);
+                    if (i < MESSAGE.length) {
+                        const ch = MESSAGE[i - 1];
+                        const pause = ch === '.' || ch === ',' || ch === '\n' ? 260 : 42;
+                        setTimeout(step, pause);
+                    } else {
+                        cursor.classList.add('done');
+                        done && done();
+                    }
+                })();
+            }
+
+            /* ---------- The timeline (the "video") ---------- */
+            const intro = $('intro');
+            const heartDraw = $('heartDraw');
+            const envWrap = $('envWrap');
+            const envelope = $('envelope');
+            const heartOut = $('heartOut');
+            const hint = $('hint');
+            const letter = $('letter');
+            const btn = $('forgiveBtn');
+
+            // 0.3s  shining text appears
+            setTimeout(() => intro.classList.add('in'), 300);
+            // 3.2s  text fades out
+            setTimeout(() => {intro.classList.remove('in'); intro.classList.add('out');}, 3200);
+            // 3.8s  heart draws itself
+            setTimeout(() => heartDraw.classList.add('in'), 3800);
+            // 6.9s  heart shrinks away
+            setTimeout(() => {heartDraw.classList.remove('in'); heartDraw.classList.add('out');}, 6900);
+            // 7.2s  envelope pops in
+            setTimeout(() => envWrap.classList.add('in'), 7200);
+
+            /* ---------- Envelope click ---------- */
+            let opened = false;
+            function openEnvelope() {
+                if (opened) return;
+                opened = true;
+                envelope.classList.add('open');
+                hint.classList.add('hide');
+
+                // heart finishes rising at ~1.9s → BLAST
+                setTimeout(() => {
+                    const r = heartOut.getBoundingClientRect();
+                    const cx = r.left + r.width / 2;
+                    const cy = r.top + r.height / 2;
+                    heartOut.classList.add('pop');
+                    popSound();
+                    blast(cx, cy, 52);
+                    envWrap.classList.remove('in');
+                    envWrap.classList.add('gone');
+                }, 2000);
+
+                // letter appears and gets written
+                setTimeout(() => {
+                    letter.classList.add('in');
+                    setTimeout(() => typeLetter(() => btn.classList.add('show')), 900);
+                }, 3000);
+            }
+            envelope.addEventListener('click', openEnvelope);
+            envelope.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') openEnvelope();
+            });
+
+            /* ---------- Final button ---------- */
+            btn.addEventListener('click', () => {
+                const r = btn.getBoundingClientRect();
+                popSound();
+                blast(r.left + r.width / 2, r.top + r.height / 2, 70);
+                btn.classList.remove('show');
+                btn.textContent = '🥰I love you! meri jaan ';
+                btn.style.animation = 'none';
+                btn.style.pointerEvents = 'none';
+                btn.style.opacity = '1';
+                btn.style.visibility = 'visible';
+                btn.style.transform = 'none';
+            });
+
+        </script>
+    </body>
+
+</html>
